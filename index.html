@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chili Oil Catalog</title>
+
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg: #faf7f5;
+        --bg2: #f5f0eb;
+        --accent: #8b3a1a;
+        --text: #2d2a26;
+        --muted: #6b6560;
+        --secondary: #d4c4b0;
+      }
+
+      .font-display {
+        font-family: "Playfair Display", serif;
+      }
+      .font-body {
+        font-family: "DM Sans", sans-serif;
+      }
+
+      .glass {
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(14px);
+      }
+
+      .pattern {
+        background-image: radial-gradient(
+            rgba(0, 0, 0, 0.04) 1px,
+            transparent 1px
+          ),
+          radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+        background-size: 22px 22px, 28px 28px;
+        background-position: 0 0, 10px 10px;
+        opacity: 0.55;
+        pointer-events: none;
+      }
+
+      .soft-ring:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(139, 58, 26, 0.18);
+      }
+
+      .chip {
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .btn {
+        transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.14);
+      }
+
+      .card-soft {
+        transition: transform 0.25s ease, box-shadow 0.25s ease,
+          border-color 0.25s ease;
+        will-change: transform;
+      }
+      .card-soft:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+      }
+
+      .safe-pb {
+        padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+      }
+
+      @keyframes toastIn {
+        from {
+          transform: translate(-50%, 10px);
+          opacity: 0;
+        }
+        to {
+          transform: translate(-50%, 0px);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="min-h-[100dvh] font-body" style="color: var(--text)">
+    <div
+      id="app"
+      class="min-h-[100dvh] w-full overflow-x-hidden overflow-y-auto relative"
+      style="background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 100%)"
+    >
+      <div class="absolute inset-0 pattern"></div>
+
+      <!-- Header -->
+      <header class="sticky top-0 z-50 border-b border-stone-200/70">
+        <div class="glass">
+          <div class="max-w-7xl mx-auto px-6 py-4 relative">
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-full flex items-center justify-center shadow-sm"
+                  style="background: var(--accent)"
+                >
+                  <span class="text-white text-lg">🌶️</span>
+                </div>
+                <div class="leading-tight">
+                  <div class="font-display text-xl font-semibold">
+                    CHILI OIL
+                  </div>
+                  <div class="text-xs" style="color: var(--muted)">
+                    Original • Small Batch
+                  </div>
+                </div>
+              </div>
+
+              <nav class="hidden md:flex items-center gap-8">
+                <a href="#produk" class="text-sm font-medium hover:opacity-70"
+                  >Produk</a
+                >
+                <a href="#tentang" class="text-sm font-medium hover:opacity-70"
+                  >Tentang</a
+                >
+              </nav>
+
+              <div class="flex items-center gap-2">
+                <button
+                  id="btn-open-cart"
+                  class="relative p-2 rounded-full chip hover:opacity-90"
+                  title="Keranjang"
+                >
+                  <svg
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m10-9l2 9m-11 0h14"
+                    />
+                  </svg>
+                  <span
+                    id="cart-badge"
+                    class="hidden absolute -top-1 -right-1 w-5 h-5 rounded-full text-[11px] font-bold flex items-center justify-center text-white"
+                    style="background: var(--accent)"
+                    >0</span
+                  >
+                </button>
+
+                <button
+                  id="btn-mobile-menu"
+                  class="md:hidden p-2 rounded-full chip hover:opacity-90"
+                  aria-label="Menu"
+                >
+                  <svg
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="M4 7h16M4 12h16M4 17h16"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div id="mobile-nav" class="md:hidden hidden mt-4">
+              <div class="p-4 rounded-2xl chip">
+                <div class="flex flex-col gap-3 text-sm font-medium">
+                  <a href="#produk" class="hover:opacity-70">Produk</a>
+                  <a href="#tentang" class="hover:opacity-70">Tentang</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Hero -->
+      <section class="pt-10 md:pt-14 pb-10 px-6 relative">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <div
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-full chip text-xs font-semibold tracking-[0.25em] uppercase"
+              style="color: var(--accent)"
+            >
+              <span>✨</span> Original Series
+            </div>
+
+            <h1
+              id="catalog-title"
+              class="font-display text-4xl md:text-5xl font-bold mt-5"
+            >
+              Chili Oil Original
+            </h1>
+
+            <p
+              id="catalog-subtitle"
+              class="text-lg mt-4 max-w-xl"
+              style="color: var(--muted)"
+            >
+              Signature chili oil—pedas gurih seimbang. Tinggal pilih ukuran
+              yang kamu butuh.
+            </p>
+
+            <div class="mt-7 flex flex-col sm:flex-row gap-3">
+              <a
+                href="#produk"
+                class="btn inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-white font-semibold soft-ring"
+                style="background: var(--accent)"
+              >
+                🛒 Pesan Sekarang
+              </a>
+              <button
+                onclick="openCart()"
+                class="btn inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold chip soft-ring"
+              >
+                🧺 Lihat Keranjang
+              </button>
+            </div>
+
+            <div class="mt-8 grid grid-cols-3 gap-4 max-w-md">
+              <div class="p-4 rounded-2xl chip">
+                <div class="font-display text-2xl font-bold">4.9</div>
+                <div class="text-xs" style="color: var(--muted)">Rating</div>
+              </div>
+              <div class="p-4 rounded-2xl chip">
+                <div class="font-display text-2xl font-bold">Original</div>
+                <div class="text-xs" style="color: var(--muted)">Signature</div>
+              </div>
+              <div class="p-4 rounded-2xl chip">
+                <div class="font-display text-2xl font-bold">3</div>
+                <div class="text-xs" style="color: var(--muted)">Ukuran</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative">
+            <div
+              class="absolute -inset-4 blur-2xl opacity-40"
+              style="
+                background: radial-gradient(
+                  circle at 30% 30%,
+                  var(--accent) 0%,
+                  transparent 60%
+                );
+              "
+            ></div>
+
+            <div class="relative p-6 md:p-8 rounded-3xl chip overflow-hidden">
+              <div
+                class="absolute -right-16 -top-16 w-56 h-56 rounded-full opacity-25"
+                style="background: var(--accent)"
+              ></div>
+              <div
+                class="absolute -left-16 -bottom-16 w-56 h-56 rounded-full opacity-20"
+                style="background: var(--secondary)"
+              ></div>
+
+              <div class="flex items-center justify-between">
+                <div>
+                  <div
+                    class="text-xs font-semibold uppercase tracking-[0.2em]"
+                    style="color: var(--muted)"
+                  >
+                    Best Pairing
+                  </div>
+                  <div class="font-display text-2xl font-bold mt-2">
+                    Mie • Dumpling • Nasi
+                  </div>
+                  <div class="text-sm mt-2" style="color: var(--muted)">
+                    Aroma bawang & rempah, pedas gurih “naik kelas”.
+                  </div>
+                </div>
+                <div class="text-6xl">🍶</div>
+              </div>
+
+              <div class="mt-6 flex gap-2 flex-wrap">
+                <span class="px-3 py-1 rounded-full text-xs font-semibold chip"
+                  >No MSG</span
+                >
+                <span class="px-3 py-1 rounded-full text-xs font-semibold chip"
+                  >Small Batch</span
+                >
+                <span class="px-3 py-1 rounded-full text-xs font-semibold chip"
+                  >🌶️🌶️ Medium</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Product -->
+      <section id="produk" class="py-10 px-6 relative">
+        <div class="max-w-7xl mx-auto">
+          <div class="flex items-end justify-between gap-4 mb-6">
+            <div>
+              <h2 class="font-display text-2xl md:text-3xl font-bold">
+                Pilih Ukuran
+              </h2>
+              <p class="text-sm mt-1" style="color: var(--muted)">
+                Klik kartu untuk memilih, atau tekan “Tambah” untuk langsung
+                masuk keranjang.
+              </p>
+            </div>
+          </div>
+
+          <div id="product-block"></div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer
+        id="tentang"
+        class="border-t border-stone-200 py-12 px-6"
+        style="background: var(--text)"
+      >
+        <div class="max-w-7xl mx-auto text-center">
+          <div class="flex items-center justify-center gap-2 mb-4">
+            <div
+              class="w-8 h-8 rounded-full flex items-center justify-center"
+              style="background: var(--accent)"
+            >
+              <span class="text-white">🌶️</span>
+            </div>
+            <span class="font-display text-xl font-semibold text-white"
+              >CHILI OIL CO</span
+            >
+          </div>
+          <p class="text-stone-300 text-sm mb-6">
+            Chili Oil Original — pedas gurih yang selalu cocok.
+          </p>
+          <div class="pt-6 border-t border-stone-700 text-stone-400 text-sm">
+            © 2026 CHILI OIL CO. Semua hak dilindungi.
+          </div>
+        </div>
+      </footer>
+
+      <!-- Cart Drawer -->
+      <div id="cart-overlay" class="fixed inset-0 z-[80] hidden">
+        <div class="absolute inset-0 bg-black/40" onclick="closeCart()"></div>
+
+        <!-- ✅ 100dvh + flex col -->
+        <div
+          class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl flex flex-col h-[100dvh]"
+          style="color: var(--text)"
+        >
+          <div
+            class="p-5 border-b border-stone-200 flex items-center justify-between shrink-0"
+          >
+            <div>
+              <div class="font-display text-xl font-bold">Keranjang</div>
+              <div
+                class="text-xs"
+                style="color: var(--muted)"
+                id="cart-subtitle"
+              >
+                0 item
+              </div>
+            </div>
+            <button class="p-2 rounded-full chip" onclick="closeCart()">
+              ✕
+            </button>
+          </div>
+
+          <!-- ✅ IMPORTANT: min-h-0 for flex overflow -->
+          <div
+            class="p-5 space-y-3 overflow-auto flex-1 min-h-0"
+            id="cart-items"
+          ></div>
+
+          <!-- footer fixed + safe area -->
+          <div class="p-5 border-t border-stone-200 shrink-0 safe-pb">
+            <div class="flex items-center justify-between mb-3">
+              <div class="text-sm" style="color: var(--muted)">Total</div>
+              <div class="font-display text-xl font-bold" id="cart-total">
+                Rp 0
+              </div>
+            </div>
+
+            <div class="mt-4 p-4 rounded-2xl chip">
+              <div class="flex items-center justify-between">
+                <div class="text-sm font-semibold">Data Pengiriman</div>
+                <div class="text-[11px]" style="color: var(--muted)">
+                  (ikut terkirim ke WA)
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3 mt-3">
+                <input
+                  class="px-3 py-2 rounded-xl chip soft-ring text-sm bg-white"
+                  placeholder="Nama"
+                  data-checkout-field="name"
+                />
+                <input
+                  class="px-3 py-2 rounded-xl chip soft-ring text-sm bg-white"
+                  placeholder="No HP"
+                  data-checkout-field="phone"
+                />
+              </div>
+
+              <textarea
+                class="mt-3 w-full px-3 py-2 rounded-xl chip soft-ring text-sm bg-white"
+                rows="3"
+                placeholder="Alamat lengkap (jalan, kecamatan, kota, kode pos)"
+                data-checkout-field="address"
+              ></textarea>
+            </div>
+
+            <div class="mt-3 p-4 rounded-2xl chip">
+              <div class="flex items-center justify-between">
+                <div class="text-sm font-semibold">Metode Bayar</div>
+              </div>
+
+              <select
+                class="mt-3 w-full px-3 py-2 rounded-xl chip soft-ring text-sm bg-white"
+                data-checkout-field="pay_method"
+              >
+                <option value="Transfer Bank">Transfer Bank</option>
+                <option value="QRIS">QRIS</option>
+                <option value="COD">COD</option>
+              </select>
+
+              <textarea
+                class="mt-3 w-full px-3 py-2 rounded-xl chip soft-ring text-sm bg-white"
+                rows="2"
+                placeholder="Catatan (opsional) — contoh: kirim sore, dsb"
+                data-checkout-field="note"
+              ></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+              <button
+                class="w-full btn py-3 rounded-xl text-white font-semibold soft-ring"
+                style="background: var(--accent)"
+                onclick="checkoutViaWA()"
+              >
+                💬 Checkout via WA
+              </button>
+
+              <button
+                class="w-full py-3 rounded-xl font-semibold chip soft-ring"
+                onclick="copyCartOrderText()"
+              >
+                📋 Copy Order
+              </button>
+            </div>
+
+            <button
+              class="w-full mt-3 py-3 rounded-xl font-semibold chip soft-ring"
+              onclick="clearCart()"
+            >
+              Kosongkan Keranjang
+            </button>
+
+            <p class="text-[11px] mt-3" style="color: var(--muted)">
+              Kalau WA tidak auto terbuka, pakai Copy Order lalu paste ke chat.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // =========================
+        // DATA
+        // =========================
+        const product = {
+          id: 1,
+          name: "Chili Oil Original",
+          emoji: "🌶️",
+          description:
+            "Signature chili oil dengan pedas gurih seimbang, aroma bawang & rempah. Cocok untuk mie, dumpling, nasi, sampai tumisan.",
+          rating: 4.9,
+          reviews: 738,
+          variants: [
+            { ml: 60, price: 39000, label: "Trial" },
+            { ml: 120, price: 65000, label: "Best Value" },
+            { ml: 250, price: 125000, label: "Family Size" },
+          ],
+        };
+
+        const defaultConfig = {
+          catalog_title: "Chili Oil Original",
+          catalog_subtitle:
+            "Signature chili oil—pedas gurih seimbang. Tinggal pilih ukuran yang kamu butuh.",
+          background_color: "#faf7f5",
+          accent_color: "#8b3a1a",
+          text_color: "#2d2a26",
+          secondary_color: "#d4c4b0",
+          font_family: "Playfair Display",
+          font_size: 16,
+
+          // ✅ GANTI NOMOR INI (format internasional, tanpa +)
+          whatsapp_number: "628817737869",
+          whatsapp_greeting: "Halo kak, saya mau order Chili Oil Original 😊",
+        };
+
+        // Cart key = "productId|ml" -> qty
+        const cart = new Map();
+
+        // Selected ml
+        let selectedMl = 120;
+
+        // Checkout form sync
+        const CHECKOUT_KEY = "chilioil_checkout";
+        let checkoutForm = {
+          name: "",
+          phone: "",
+          address: "",
+          pay_method: "Transfer Bank",
+          note: "",
+        };
+
+        const fmt = (n) =>
+          "Rp " + n.toLocaleString("id-ID", { maximumFractionDigits: 0 });
+
+        function adjustColor(hex, percent) {
+          const num = parseInt(hex.replace("#", ""), 16);
+          const amt = Math.round(2.55 * percent);
+          const R = Math.min(255, Math.max(0, (num >> 16) + amt));
+          const G = Math.min(255, Math.max(0, ((num >> 8) & 0x00ff) + amt));
+          const B = Math.min(255, Math.max(0, (num & 0x0000ff) + amt));
+          return (
+            "#" + [R, G, B].map((x) => x.toString(16).padStart(2, "0")).join("")
+          );
+        }
+
+        function getVariantByMl(ml) {
+          return (
+            product.variants.find((v) => v.ml === Number(ml)) ||
+            product.variants[0]
+          );
+        }
+
+        function keyOf(productId, ml) {
+          return `${productId}|${ml}`;
+        }
+
+        // =========================
+        // Checkout form sync
+        // =========================
+        function loadCheckoutForm() {
+          try {
+            const raw = localStorage.getItem(CHECKOUT_KEY);
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              checkoutForm = {
+                name: String(parsed.name || ""),
+                phone: String(parsed.phone || ""),
+                address: String(parsed.address || ""),
+                pay_method: String(parsed.pay_method || "Transfer Bank"),
+                note: String(parsed.note || ""),
+              };
+            }
+          } catch (_) {}
+        }
+
+        function saveCheckoutForm() {
+          try {
+            localStorage.setItem(CHECKOUT_KEY, JSON.stringify(checkoutForm));
+          } catch (_) {}
+        }
+
+        function syncCheckoutInputs() {
+          document.querySelectorAll("[data-checkout-field]").forEach((el) => {
+            const field = el.getAttribute("data-checkout-field");
+            if (!field) return;
+            const val = checkoutForm[field] ?? "";
+            if (el.value !== val) el.value = val;
+          });
+        }
+
+        function bindCheckoutInputs() {
+          document.querySelectorAll("[data-checkout-field]").forEach((el) => {
+            const handler = () => {
+              const field = el.getAttribute("data-checkout-field");
+              if (!field) return;
+              checkoutForm[field] = el.value;
+              saveCheckoutForm();
+              syncCheckoutInputs();
+            };
+            el.addEventListener("input", handler);
+            el.addEventListener("change", handler);
+          });
+        }
+
+        // =========================
+        // Variant Cards Renderer
+        // =========================
+        function renderVariantCards({ targetEl, activeMl, onSelect, onAdd }) {
+          targetEl.innerHTML = "";
+
+          product.variants.forEach((v) => {
+            const isActive = Number(activeMl) === Number(v.ml);
+
+            const el = document.createElement("div");
+            el.className = "card-soft p-4 rounded-2xl chip cursor-pointer";
+            el.style.borderColor = isActive
+              ? "var(--accent)"
+              : "rgba(0,0,0,0.06)";
+            el.style.background = isActive
+              ? "rgba(255,255,255,0.95)"
+              : "rgba(255,255,255,0.72)";
+
+            el.innerHTML = `
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <div class="font-display text-xl font-bold">${v.ml} ml</div>
+                  <div class="text-xs mt-1" style="color: var(--muted)">
+                    ${v.label || "—"}
+                  </div>
+                </div>
+                <div class="px-2.5 py-1 rounded-full text-[11px] font-bold text-white"
+                  style="background:${
+                    isActive ? "var(--accent)" : "rgba(0,0,0,0.28)"
+                  }">
+                  ${isActive ? "Dipilih" : "Pilih"}
+                </div>
+              </div>
+
+              <div class="mt-4 flex items-end justify-between">
+                <div class="font-display text-2xl font-bold" style="color: var(--accent)">
+                  ${fmt(v.price)}
+                </div>
+                <button class="btn px-3 py-2 rounded-xl text-white text-sm font-semibold soft-ring"
+                  style="background: var(--accent)"
+                  type="button">
+                  Tambah
+                </button>
+              </div>
+            `;
+
+            el.addEventListener("click", () => onSelect(v.ml));
+            el.querySelector("button").addEventListener("click", (e) => {
+              e.stopPropagation();
+              onAdd(v.ml);
+            });
+
+            targetEl.appendChild(el);
+          });
+        }
+
+        // =========================
+        // Product Block Render (NO DETAIL BUTTON)
+        // =========================
+        function renderProductBlock() {
+          const wrap = document.getElementById("product-block");
+          const accent =
+            getComputedStyle(document.documentElement)
+              .getPropertyValue("--accent")
+              .trim() || defaultConfig.accent_color;
+
+          const heroBg = `linear-gradient(135deg, ${adjustColor(
+            accent,
+            18
+          )} 0%, var(--accent) 100%)`;
+          const active = getVariantByMl(selectedMl);
+
+          wrap.innerHTML = `
+            <div class="grid md:grid-cols-2 gap-8">
+              <div class="rounded-3xl overflow-hidden shadow-md bg-white">
+                <div class="h-[330px] flex items-center justify-center text-[110px]" style="background:${heroBg}">
+                  <div class="drop-shadow-sm">${product.emoji}</div>
+                </div>
+                <div class="p-6">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <div class="font-display text-3xl font-bold">${
+                        product.name
+                      }</div>
+                      <div class="text-sm mt-1" style="color: var(--muted)">${
+                        product.description
+                      }</div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-sm font-semibold">⭐ ${
+                        product.rating
+                      }</div>
+                      <div class="text-xs" style="color: var(--muted)">(${
+                        product.reviews
+                      } ulasan)</div>
+                    </div>
+                  </div>
+
+                  <div class="mt-5 p-4 rounded-2xl chip">
+                    <div class="text-xs" style="color: var(--muted)">Ukuran terpilih</div>
+                    <div class="flex items-end justify-between mt-2">
+                      <div class="font-display text-2xl font-bold">${
+                        active.ml
+                      } ml</div>
+                      <div class="font-display text-2xl font-bold" style="color: var(--accent)">${fmt(
+                        active.price
+                      )}</div>
+                    </div>
+                  </div>
+
+                  <!-- ✅ tombol detail dihapus, diganti Buka Keranjang -->
+                  <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button
+                      class="btn w-full py-3 rounded-xl text-white font-semibold soft-ring"
+                      style="background: var(--accent)"
+                      onclick="addToCartSelected()"
+                    >
+                      🛒 Tambah ukuran terpilih
+                    </button>
+                    <button
+                      class="btn w-full py-3 rounded-xl font-semibold chip soft-ring"
+                      onclick="openCart()"
+                    >
+                      🧺 Buka Keranjang
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-3xl chip p-6">
+                <div class="font-display text-2xl font-bold">Pilih ukuran</div>
+                <div class="text-sm mt-1" style="color: var(--muted)">
+                  Klik kartu untuk memilih, atau tekan “Tambah” untuk langsung masuk keranjang.
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5" id="variants-grid"></div>
+
+                <div class="mt-6 p-4 rounded-2xl chip">
+                  <div class="text-sm font-semibold">Checkout cepat</div>
+                  <p class="text-sm mt-1" style="color: var(--muted)">
+                    Buka keranjang untuk isi alamat & metode bayar, lalu checkout via WhatsApp.
+                  </p>
+                  <button
+                    class="btn mt-4 w-full py-3 rounded-xl text-white font-semibold soft-ring"
+                    style="background: var(--accent)"
+                    onclick="openCart()"
+                  >
+                    🧺 Buka Keranjang
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+
+          const grid = document.getElementById("variants-grid");
+          renderVariantCards({
+            targetEl: grid,
+            activeMl: selectedMl,
+            onSelect: (ml) => {
+              selectedMl = ml;
+              renderProductBlock();
+            },
+            onAdd: (ml) => addToCart(product.id, ml),
+          });
+        }
+
+        // =========================
+        // Cart logic
+        // =========================
+        function updateCounts() {
+          let totalQty = 0;
+          cart.forEach((qty) => (totalQty += qty));
+          const badge = document.getElementById("cart-badge");
+          badge.textContent = totalQty;
+          badge.classList.toggle("hidden", totalQty === 0);
+        }
+
+        function addToCart(productId, ml) {
+          const v = getVariantByMl(ml);
+          const k = keyOf(productId, v.ml);
+          cart.set(k, (cart.get(k) || 0) + 1);
+          updateCounts();
+          showNotification(`${product.name} ${v.ml}ml ditambahkan 🛒`);
+          renderCart();
+        }
+
+        function addToCartSelected() {
+          addToCart(product.id, selectedMl);
+        }
+
+        function lockScroll(lock) {
+          document.documentElement.style.overflow = lock ? "hidden" : "";
+          document.body.style.overflow = lock ? "hidden" : "";
+        }
+
+        function openCart() {
+          document.getElementById("cart-overlay").classList.remove("hidden");
+          lockScroll(true);
+          renderCart();
+          syncCheckoutInputs();
+        }
+
+        function closeCart() {
+          document.getElementById("cart-overlay").classList.add("hidden");
+          lockScroll(false);
+        }
+
+        function clearCart() {
+          cart.clear();
+          renderCart();
+          updateCounts();
+          showNotification("Keranjang dikosongkan");
+        }
+
+        function changeQty(key, delta) {
+          const current = cart.get(key) || 0;
+          const next = current + delta;
+          if (next <= 0) cart.delete(key);
+          else cart.set(key, next);
+          renderCart();
+          updateCounts();
+        }
+
+        function renderCart() {
+          const wrap = document.getElementById("cart-items");
+          const sub = document.getElementById("cart-subtitle");
+          const totalEl = document.getElementById("cart-total");
+
+          let totalQty = 0;
+          let total = 0;
+          wrap.innerHTML = "";
+
+          if (cart.size === 0) {
+            wrap.innerHTML = `
+              <div class="p-8 rounded-3xl chip text-center">
+                <div class="text-5xl mb-3">🛒</div>
+                <div class="font-display text-xl font-bold">Keranjang kosong</div>
+                <div class="text-sm mt-2" style="color: var(--muted)">
+                  Pilih ukuran lalu tekan “Tambah”.
+                </div>
+              </div>
+            `;
+            sub.textContent = "0 item";
+            totalEl.textContent = fmt(0);
+            return;
+          }
+
+          cart.forEach((qty, k) => {
+            const [, mlStr] = k.split("|");
+            const ml = Number(mlStr);
+            const v = getVariantByMl(ml);
+            const lineTotal = v.price * qty;
+
+            totalQty += qty;
+            total += lineTotal;
+
+            const row = document.createElement("div");
+            row.className =
+              "p-4 rounded-2xl chip flex items-center justify-between gap-3";
+
+            row.innerHTML = `
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
+                  style="background: linear-gradient(135deg, rgba(255,255,255,0.35) 0%, var(--accent) 100%);">
+                  ${product.emoji}
+                </div>
+                <div>
+                  <div class="font-semibold">${product.name}</div>
+                  <div class="text-xs" style="color: var(--muted)">
+                    ${v.ml} ml • ${fmt(v.price)} • Subtotal ${fmt(lineTotal)}
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button class="w-9 h-9 rounded-xl chip" onclick="changeQty('${k}', -1)">−</button>
+                <div class="w-8 text-center font-semibold">${qty}</div>
+                <button class="w-9 h-9 rounded-xl chip" onclick="changeQty('${k}', 1)">+</button>
+              </div>
+            `;
+
+            wrap.appendChild(row);
+          });
+
+          sub.textContent = `${totalQty} item`;
+          totalEl.textContent = fmt(total);
+        }
+
+        // =========================
+        // WhatsApp + Copy
+        // =========================
+        function buildWAUrl(number, message) {
+          const clean = String(number || "").replace(/[^\d]/g, "");
+          const base = `https://wa.me/${clean}`;
+          return `${base}?text=${encodeURIComponent(message)}`;
+        }
+
+        function openWhatsApp(message) {
+          const num =
+            window.__cfg?.whatsapp_number || defaultConfig.whatsapp_number;
+          if (!num || String(num).trim().length < 8) {
+            showNotification("Nomor WhatsApp belum di-set 😅");
+            return;
+          }
+          window.open(
+            buildWAUrl(num, message),
+            "_blank",
+            "noopener,noreferrer"
+          );
+        }
+
+        function footerText() {
+          const name = (checkoutForm.name || "").trim() || "-";
+          const phone = (checkoutForm.phone || "").trim() || "-";
+          const address = (checkoutForm.address || "").trim() || "-";
+          const pay = (checkoutForm.pay_method || "").trim() || "Transfer Bank";
+          const note = (checkoutForm.note || "").trim() || "-";
+
+          return [
+            "",
+            "📦 Pengiriman:",
+            `Nama: ${name}`,
+            `No HP: ${phone}`,
+            `Alamat: ${address}`,
+            "",
+            "💳 Metode Bayar:",
+            `${pay}`,
+            "",
+            "📝 Catatan:",
+            `${note}`,
+          ].join("\n");
+        }
+
+        function buildCartOrderText() {
+          const greeting =
+            window.__cfg?.whatsapp_greeting || defaultConfig.whatsapp_greeting;
+
+          if (cart.size === 0) {
+            return [
+              greeting,
+              "",
+              "🧾 Detail Order:",
+              "- (keranjang kosong)",
+              footerText(),
+            ].join("\n");
+          }
+
+          let total = 0;
+          const lines = [];
+
+          cart.forEach((qty, k) => {
+            const [, mlStr] = k.split("|");
+            const v = getVariantByMl(Number(mlStr));
+            const sub = v.price * qty;
+            total += sub;
+            lines.push(`- ${product.name} (${v.ml}ml) x ${qty} = ${fmt(sub)}`);
+          });
+
+          return [
+            greeting,
+            "",
+            "🧾 Detail Order:",
+            ...lines,
+            "",
+            `💰 Total: ${fmt(total)}`,
+            footerText(),
+          ].join("\n");
+        }
+
+        function checkoutViaWA() {
+          openWhatsApp(buildCartOrderText());
+        }
+
+        async function copyTextToClipboard(text) {
+          try {
+            if (navigator.clipboard && window.isSecureContext) {
+              await navigator.clipboard.writeText(text);
+              return true;
+            }
+          } catch (_) {}
+
+          try {
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.left = "-9999px";
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            const ok = document.execCommand("copy");
+            ta.remove();
+            return ok;
+          } catch (_) {
+            return false;
+          }
+        }
+
+        async function copyCartOrderText() {
+          const ok = await copyTextToClipboard(buildCartOrderText());
+          showNotification(ok ? "Order berhasil di-copy ✅" : "Gagal copy 😅");
+        }
+
+        // =========================
+        // Toast
+        // =========================
+        function showNotification(message) {
+          const existing = document.querySelector(".notification-toast");
+          if (existing) existing.remove();
+
+          const notification = document.createElement("div");
+          notification.className =
+            "notification-toast fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-white text-sm font-medium shadow-lg z-[95]";
+          notification.style.background = "var(--accent)";
+          notification.style.animation = "toastIn 0.25s ease-out";
+          notification.textContent = message;
+
+          document.body.appendChild(notification);
+
+          setTimeout(() => {
+            notification.style.opacity = "0";
+            notification.style.transition = "opacity 0.25s ease";
+            setTimeout(() => notification.remove(), 250);
+          }, 2400);
+        }
+
+        // =========================
+        // Element SDK Integration
+        // =========================
+        async function onConfigChange(config) {
+          window.__cfg = config;
+
+          const title = config.catalog_title || defaultConfig.catalog_title;
+          const subtitle =
+            config.catalog_subtitle || defaultConfig.catalog_subtitle;
+
+          const bg = config.background_color || defaultConfig.background_color;
+          const accent = config.accent_color || defaultConfig.accent_color;
+          const text = config.text_color || defaultConfig.text_color;
+          const secondary =
+            config.secondary_color || defaultConfig.secondary_color;
+
+          const fontFamily = config.font_family || defaultConfig.font_family;
+          const fontSize = config.font_size || defaultConfig.font_size;
+
+          document.getElementById("catalog-title").textContent = title;
+          document.getElementById("catalog-subtitle").textContent = subtitle;
+
+          document.documentElement.style.setProperty("--bg", bg);
+          document.documentElement.style.setProperty(
+            "--bg2",
+            adjustColor(bg, -6)
+          );
+          document.documentElement.style.setProperty("--accent", accent);
+          document.documentElement.style.setProperty("--text", text);
+          document.documentElement.style.setProperty("--secondary", secondary);
+
+          document.querySelectorAll(".font-display").forEach((el) => {
+            el.style.fontFamily = `${fontFamily}, serif`;
+          });
+
+          const titleEl = document.getElementById("catalog-title");
+          if (titleEl) titleEl.style.fontSize = `${fontSize * 2.8}px`;
+
+          renderProductBlock();
+          renderCart();
+          syncCheckoutInputs();
+        }
+
+        function mapToCapabilities(config) {
+          return {
+            recolorables: [
+              {
+                get: () =>
+                  config.background_color || defaultConfig.background_color,
+                set: (value) => {
+                  config.background_color = value;
+                  window.elementSdk.setConfig({ background_color: value });
+                },
+              },
+              {
+                get: () => config.accent_color || defaultConfig.accent_color,
+                set: (value) => {
+                  config.accent_color = value;
+                  window.elementSdk.setConfig({ accent_color: value });
+                },
+              },
+              {
+                get: () => config.text_color || defaultConfig.text_color,
+                set: (value) => {
+                  config.text_color = value;
+                  window.elementSdk.setConfig({ text_color: value });
+                },
+              },
+              {
+                get: () =>
+                  config.secondary_color || defaultConfig.secondary_color,
+                set: (value) => {
+                  config.secondary_color = value;
+                  window.elementSdk.setConfig({ secondary_color: value });
+                },
+              },
+            ],
+            borderables: [],
+            fontEditable: {
+              get: () => config.font_family || defaultConfig.font_family,
+              set: (value) => {
+                config.font_family = value;
+                window.elementSdk.setConfig({ font_family: value });
+              },
+            },
+            fontSizeable: {
+              get: () => config.font_size || defaultConfig.font_size,
+              set: (value) => {
+                config.font_size = value;
+                window.elementSdk.setConfig({ font_size: value });
+              },
+            },
+          };
+        }
+
+        function mapToEditPanelValues(config) {
+          return new Map([
+            [
+              "catalog_title",
+              config.catalog_title || defaultConfig.catalog_title,
+            ],
+            [
+              "catalog_subtitle",
+              config.catalog_subtitle || defaultConfig.catalog_subtitle,
+            ],
+            [
+              "whatsapp_number",
+              config.whatsapp_number || defaultConfig.whatsapp_number,
+            ],
+            [
+              "whatsapp_greeting",
+              config.whatsapp_greeting || defaultConfig.whatsapp_greeting,
+            ],
+          ]);
+        }
+
+        // =========================
+        // Events + Init
+        // =========================
+        document
+          .getElementById("btn-open-cart")
+          .addEventListener("click", openCart);
+        document
+          .getElementById("btn-mobile-menu")
+          .addEventListener("click", () => {
+            document.getElementById("mobile-nav").classList.toggle("hidden");
+          });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") closeCart();
+        });
+
+        // Init
+        window.__cfg = defaultConfig;
+        loadCheckoutForm();
+
+        renderProductBlock();
+        renderCart();
+        updateCounts();
+
+        bindCheckoutInputs();
+        syncCheckoutInputs();
+
+        if (window.elementSdk) {
+          window.elementSdk.init({
+            defaultConfig,
+            onConfigChange,
+            mapToCapabilities,
+            mapToEditPanelValues,
+          });
+        }
+      </script>
+    </div>
+  </body>
+</html>
